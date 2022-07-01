@@ -20,9 +20,29 @@ body {
     border-bottom: solid 2px #3a3a3c;
 }
 
+/* style for showing model with agebts */
+/* #model-container {
+    width: 600px;
+    border-bottom: solid 2px #3a3a3c;
+} */
+
+/* style for table container */
 #model-container {
     width: 600px;
     border-bottom: solid 2px #3a3a3c;
+}
+
+table {
+    margin-bottom: 15px;
+}
+
+table, td {
+    border: 1px solid #999;
+}
+
+td {
+    padding: 0 4px;
+    text-align: right;
 }
 
 #graph-container {
