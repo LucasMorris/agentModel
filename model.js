@@ -21,17 +21,6 @@ const tax = 0.2;            // Agent susceptibility to tax changes
 const distance = 0.6        // Agent distance to work/destination
 
 
-// // Agent visual model setup
-// const environment = new flocc.Environment();
-// const containerModel = document.getElementById("model-container");
-// const renderer = new flocc.CanvasRenderer(environment, {
-//     background: "#FFFFFF",
-//     widthModel,
-//     heightModel
-// });
-// renderer.mount(containerModel);
-
-
 // Agent model environment setup
 const environment = new flocc.Environment();
 environment.set("financial", financial);      
@@ -39,6 +28,10 @@ environment.set("concern", concern);
 environment.set("subsidy", subsidy);
 environment.set("tax", tax);
 environment.set("distance", distance);
+
+
+// Set agent starting data
+const preference = utils.random();
 
 
 // Create agent to represent government making subsity and tax decisions
@@ -87,36 +80,16 @@ graph.mount(containerGraph);
 // !MUST EDIT AND ADAPT
 const containerModel = document.getElementById("model-container");
 const table = new flocc.TableRenderer(environment, {
-  precision: 1,
-  refresh: 100
+  precision: 1,   // Number of floating point decimal places to be shown
+  filter: agent => {
+    return agent.get(preference)
+  }
 });
 table.columns = [
   "Preference",
   "Number of population",
-  
 ];
 table.mount(containerModel);
-
-
-// // Create agents to be shown on model
-// function setup() {
-//   for (var i = 0; i <= population; i++) {
-//     const agent = new flocc.Agent({
-//       x: utils.uniform() * widthModel, //agent starts randomly on x axis
-//       y: heightModel / 2,              //agent starting position in middle of model
-//       shape: "circle",                 //shape of agent (can be circle, rect, triangle or arrow)
-//       size: 3,                         //size of rendered agent in px
-//       preference: utils.random()       //generate random preference 0,1
-//     });
-    
-//     // !TESTING DELETE
-//     console.log(agent.getData());
-
-//     agent.set(tick);
-
-//     environment.addAgent(agent);
-//   }
-// }
 
 
 // Create general population agents and add to environment
@@ -186,7 +159,7 @@ function ui() {
       }
     }),
     new floccUI.Button({
-      label: "Reset",
+      label: "Reset",       // !Known bug: when reset is clicked, new ui box is created in background
       onClick() {
         setup();
         ui();
@@ -194,7 +167,6 @@ function ui() {
     }),
   ])
 }
-
 
 
 function run() {
