@@ -9,7 +9,7 @@ const utils = flocc.utils;
 const widthModel = 600;
 const heightModel = 600;
 const widthGraph = 600;
-const heightGraph = 300;
+const heightGraph = 600;
 
 
 // Setting model parameters
@@ -31,7 +31,7 @@ environment.set("distance", distance);
 
 
 // Set agent starting data
-const preference = utils.random();
+// const preference = utils.random();
 
 
 // Create agent to represent government making decisions
@@ -56,46 +56,46 @@ function tick(agent) {
 }
 
 
-// Graph setup (maybe add into the setup() frunction???)
+// Graph setup (maybe add into the setup() frunction?)
 const containerGraph = document.getElementById("graph-container");
 const graph = new flocc.LineChartRenderer(environment, {
   autoScale: true,    // Allows x axis to adjust as time increases
   background: "#FFFFFF",
-  widthGraph,
-  heightGraph
+  height: heightGraph,
+  width: widthGraph
 });
 // TODO Show agent's transport preference based upon graph line color
 // Brown = fossile fuel powered car (1)
-// Yellow = public transport (0)
+// Orange = public transport (0)
 // Green = electric car (-1)
 graph.metric("preference", {
   color: "brown",
   fn(arr) {
-    return arr.filter((state) => state === 1).length / population;
+    return arr.filter((currentState) => currentState === 1).length / population;
   }
 });
 graph.metric("preference", {
-  color: "yellow",
+  color: "orange",
   fn(arr) {
-    return arr.filter((state) => state === 0).length / population;
+    return arr.filter((currentState) => currentState === 0).length / population;
   }
 });
 graph.metric("preference", {
   color: "green",
   fn(arr) {
-    return arr.filter((state) => state === -1).length / population;
+    return arr.filter((currentState) => currentState === -1).length / population;
   }
 });
 graph.mount(containerGraph);
 
 
 // Add table to show population preference breakdown
-// !MUST EDIT AND ADAPT
+// !MUST EDIT AND ADAPT TO SHOW DETAILED BREAKDOWN
 const containerModel = document.getElementById("model-container");
 const table = new flocc.TableRenderer(environment, {
   precision: 1,   // Number of floating point decimal places to be shown
   filter: agent => {
-    return agent.get(preference)
+    return agent.get("preference")
   }
 });
 table.columns = [
