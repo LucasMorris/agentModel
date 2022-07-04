@@ -2,7 +2,7 @@ const utils = flocc.utils;
 
 
 // Random numbers consistent when app starts
-utils.seed(1);
+// utils.seed(1);
 
 
 // Setting model and graph window sizes
@@ -34,7 +34,7 @@ environment.set("distance", distance);
 const preference = utils.random();
 
 
-// Create agent to represent government making subsity and tax decisions
+// Create agent to represent government making decisions
 function tick(agent) {
   // skip first tick to allow graph to plot starting values
   if(environment.time === 0) {
@@ -70,9 +70,22 @@ const graph = new flocc.LineChartRenderer(environment, {
 // Green = electric car (-1)
 graph.metric("preference", {
   color: "brown",
-
-}
-)
+  fn(arr) {
+    return arr.filter((state) => state === 1).length / population;
+  }
+});
+graph.metric("preference", {
+  color: "yellow",
+  fn(arr) {
+    return arr.filter((state) => state === 0).length / population;
+  }
+});
+graph.metric("preference", {
+  color: "green",
+  fn(arr) {
+    return arr.filter((state) => state === -1).length / population;
+  }
+});
 graph.mount(containerGraph);
 
 
@@ -99,7 +112,8 @@ function setup() {
   for(var i = 0; i <= population; i++) {
     const agent = new flocc.Agent( {
       // TODO ADD interaction values. Check these are correct
-      preference: utils.sample([-1, 0, 1], [1, 1, 4])
+      preference: utils.sample([-1, 0, 1], [1, 1, 1])    // Sample gets a random value (array to select from [] and wieghts [])
+      // preference: 0   // All agents start with preference 0 (FOR TESTING)
     });
     agent.set(tick);
     environment.addAgent(agent);
@@ -108,6 +122,7 @@ function setup() {
 
 
 // Create the UI interface to change parameters
+// TODO Does graph need to be nested here so interactions work?
 // TODO Move into separeate UI file?
 function ui() {
   new floccUI.Panel(environment, [
