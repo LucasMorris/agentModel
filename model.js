@@ -14,110 +14,72 @@ const heightGraph = 600;
 
 // Setting model parameters
 const population = 100;     // Number of agents in model
-const financial = 0.3;      // Agent financial situtaion
-const concern = 0.2;        // Agent concern for environment
-const subsidy = 0.5;        // Agent susceptibility to subsidies
-const tax = 0.2;            // Agent susceptibility to tax changes
-const distance = 0.6        // Agent distance to work/destination
+// const financial = 0.3;      // Agent financial situtaion
+const subsidy = 0.1;        // Agent susceptibility to subsidies
+const tax = 0.2;          // Agent susceptibility to tax changes
+// const distance = 20;       // Agent distance to work/destination
+// const concern = 0.5;        // Agent concern for environment
 
 
 // Agent model environment setup
 const environment = new flocc.Environment();
-environment.set("financial", financial);      
-environment.set("concern", concern);
+// environment.set("financial", financial);      
 environment.set("subsidy", subsidy);
 environment.set("tax", tax);
-environment.set("distance", distance);
 
 
-// Set agent starting data
-// const preference = utils.random();
-
-
-// Create agent to represent government making decisions
+// Agent tick interactions
 function tick(agent) {
-  // skip first tick to allow graph to plot starting values
-  // if(environment.time === 0) {
-  //   return;
-  // }
-  // TODO finish implementing logic that allows agents to interact with environment and change preference
-  
-  // const { financial, concern, subsidy, tax, distance } = environment.getData();
-
-  // const { preference } = agent.getData();
+// TODO finish implementing logic that allows agents to interact with environment and change preference
 
 
-  const r = utils.uniform();
+   let { concern, distance } = agent.getData();
 
-  console.log(r)
+   let tax = environment.get("tax");
+   let subsidy = environment.get("subsidy");
 
-  if(r < 0.001) {
-    return {
-      preference: -1
-    }
-  }
-  else return;
+ 
+// distance
 
 
+// concern 
 
+// tax 
+// if tax > 
+
+// preference 1=car, 0=bike, -1=ecar
+
+let carPref = ((100 - tax) / 100);
+
+let bikePref = (concern / 20) * ((20 - Math.min(distance, 20)) / 20); //if further than 20 km then too far to cylce
+
+let eCarPref = (-1);
+
+if(bikePref > carPref) {
+  agent.set("preference", 1)
+}
+else if (bikePref > eCarPref ) {
+  agent.set("preference", 0)
+}
+else {
+  agent.set("preference", -1)
 }
 
-// function tick(agent) {
-//   // skip first tick to allow graph to plot starting values
-//   if(environment.time === 0) {
-//     return;
-//   }
-//   // TODO finish implementing logic that allows agents to interact with environment and change preference
-  
-//   const { financial, concern, subsidy, tax, distance } = environment.getData();
+console.log(carPref, bikePref);
 
-//   const { preference } = agent.getData();
 
-//   console.log(preference)
+  // const r = utils.uniform();
 
-//   // if agent has electric no interaction
-//   if(preference === -1) {
-//     return;
-//   }
+  // console.log(r)
 
-//   // Interact with general population
-//   let genPop
-//   do {
-//     genPop = utils.sample(environment.getAgents());
-//   }
-//   while(genPop === agent);
+  // if(r < 0.001) {
+  //   return {
+  //     preference: -1
+  //   }
+  // }
+  // else return;
 
-//   const genPopPref = genPop.get("preference");
-
-//   const r = utils.uniform();
-
-//   if(r < 0.2) {
-//     return {
-//       preference: -1
-//     }
-//   }
-//   else return;
-
-//   // agent needs to be tempeted away from fossil
-//   if(genPopPref === 1) {
-//     // if their concern is high they will switch
-//     if(r < concern) {
-//       genPop.set("preference", preference);
-//     }
-//     // But it is possible that tax levels on fuel are low which causes them to stay?
-//     else if(r < concern + concern * tax) {
-//       genPop.set("preference", -1 * preference);
-//     }
-//   }
-
-//   else if(preference !== genPopPref) {
-//     if((r < concern * subsidy * distance)) genPop.set("preference", -1)
-//   }
-//   else {
-//     if(r < concern * subsidy * financial) genPop.set("preference", -1)
-//   }
-// }
-
+}
 
 
 // Create general population agents and add to environment
@@ -126,12 +88,12 @@ function setup() {
   environment.clear();
   for(var i = 0; i <= population; i++) {
     const agent = new flocc.Agent( {
-      // TODO ADD interaction values. Check these are correct
-      preference: utils.sample([-1, 0, 1], [1, 1, 1]),    // Sample gets a random value (array to select from [] and wieghts [])
-      // preference: 0   // All agents start with preference 0 (FOR TESTING)
+      // preference: utils.sample([-1, 0, 1 ], [1, 1, 1]), //!REMOVE as it will be calcualted
+      distance: utils.random(0, 100),
+      concern: utils.gaussian(10, 1),
       tick: tick,
-    });
-    // agent.set(tick);
+    });  
+    //agent.set(tick);
     environment.addAgent(agent);
   }
 }
@@ -164,19 +126,19 @@ table.mount(containerModel);
 // TODO Move into separeate UI file?
 function ui() {
   new floccUI.Panel(environment, [
-    new floccUI.Slider({
-      name: "financial",
-      label: "Purchasing power",
-      min: 0,
-      max: 1,
-      step: 0.01
-    }),
+    // new floccUI.Slider({
+    //   name: "financial",
+    //   label: "Purchasing power",
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01
+    // }),
     new floccUI.Slider({
       name: "concern",
       label: "Env. concisouness",
       min: 0,
-      max: 1,
-      step: 0.01
+      max: 10,
+      step: 1
     }),
     new floccUI.Slider({
       name: "subsidy",
@@ -187,7 +149,7 @@ function ui() {
     }),
     new floccUI.Slider({
       name: "tax",
-      label: "Fossile Fuel Tax",
+      label: "Fuel Tax",
       min: 0,
       max: 1,
       step: 0.01
@@ -196,13 +158,15 @@ function ui() {
       name: "distance",
       label: "Avg. distance travelled",
       min: 0,
-      max: 1,
-      step: 0.01,
+      max: 100,
+      step: 1,
     }),
     new floccUI.Button({
       label: "Start",
       onClick() {
-        // TODO Add functionality to start model
+        // setup();
+        // ui();
+        // run();
       }
     }),
     new floccUI.Button({
@@ -228,8 +192,8 @@ function ui() {
   });
   // TODO Show agent's transport preference based upon graph line color
   // Brown = fossile fuel powered car (1)
-  // Orange = public transport (0)
-  // Green = electric car (-1)
+  // Orange = bike (0)
+  // Green = ecar (-1)
   graph.metric("preference", {
     color: "brown",
     fn(arr) {
@@ -253,13 +217,23 @@ function ui() {
 
 
 function run() {
-  environment.tick({ randomizeOrder: true });
+  environment.set("subsidy", environment.get("subsidy") + )
+  environment.set("tax", environment.get("tax") + 0.1);
+  environment.tick({
+    randomizeOrder: true,    
+  });
+  //!add when time increases environemental conceinecs increases (set env conc to 0.5 at start and multiply by 1.1 by each step)
   if (environment.time <= 1000) {
     requestAnimationFrame(run);
   };
+  
 };
 
 
 setup();
 ui();
 run();
+
+
+//ENVIRONMENT has factors that change over time that influence what the prerference development is 
+//even with low env conc, a high tax will lead to a switch to green cars 
