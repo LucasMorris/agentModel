@@ -15,7 +15,7 @@ const heightGraph = 600;
 // Setting model parameters
 const population = 100;     // Number of agents in model
 // const financial = 0.3;      // Agent financial situtaion
-const subsidy = 0.1;        // Agent susceptibility to subsidies
+const subsidy = 0;        // Agent susceptibility to subsidies
 const tax = 0.2;          // Agent susceptibility to tax changes
 // const distance = 20;       // Agent distance to work/destination
 // const concern = 0.5;        // Agent concern for environment
@@ -32,42 +32,34 @@ environment.set("tax", tax);
 function tick(agent) {
 // TODO finish implementing logic that allows agents to interact with environment and change preference
 
-
    let { concern, distance } = agent.getData();
 
    let tax = environment.get("tax");
    let subsidy = environment.get("subsidy");
 
- 
-// distance
-
-
-// concern 
-
-// tax 
-// if tax > 
-
 // preference 1=car, 0=bike, -1=ecar
+  let carPref = ((100 - tax) / 100);
 
-let carPref = ((100 - tax) / 100);
+  let bikePref = (concern / 20) * ((20 - Math.min(distance, 20)) / 20); //if further than 20 km then too far to cylce
 
-let bikePref = (concern / 20) * ((20 - Math.min(distance, 20)) / 20); //if further than 20 km then too far to cylce
+  let eCarPref = (-1);
 
-let eCarPref = (-1);
+  if (bikePref > carPref) {
+    agent.set("preference", 1)
+  }
+  else if (bikePref > eCarPref) {
+    agent.set("preference", 0)
+  }
+  else {
+    agent.set("preference", -1)
+  }
 
-if(bikePref > carPref) {
-  agent.set("preference", 1)
-}
-else if (bikePref > eCarPref ) {
-  agent.set("preference", 0)
-}
-else {
-  agent.set("preference", -1)
-}
-
-console.log(carPref, bikePref);
+  console.log(carPref, bikePref);
 
 
+  /*
+    DEBUGGING LOGIC
+  */
   // const r = utils.uniform();
 
   // console.log(r)
@@ -217,8 +209,8 @@ function ui() {
 
 
 function run() {
-  environment.set("subsidy", environment.get("subsidy") + )
-  environment.set("tax", environment.get("tax") + 0.1);
+  environment.set("subsidy", environment.get("subsidy") + 0.2) //!Change subsidy value
+  environment.set("tax", environment.get("tax") + 0.1); //!Change tax value (to be random)
   environment.tick({
     randomizeOrder: true,    
   });
