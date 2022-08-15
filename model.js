@@ -84,8 +84,9 @@ let eCarPref =
   }
 
   //DEBUGGING - To remove:
-  //console.log(carPref, bikePref, eCarPref);
-  console.log(concern, distance, tax, subsidy);
+  // console.log(carPref, bikePref, eCarPref);
+  // console.log(concern, distance, tax, subsidy);
+  // console.log(tax);
 }
 
 
@@ -134,9 +135,10 @@ function ui() {
     // }),
 
     new floccUI.Radio({
-      name: "subsidyFixed",
       choices: [0, 1],
       choiceLabels: ["Yes", "No"],
+      label: "fixed sub", // BUG does not show
+      name: "subsidyFixed",
       value: subsidyFixed
     }),
     new floccUI.Radio({
@@ -159,17 +161,22 @@ function ui() {
       max: 25,
       step: 1 
     }),
-    //OLD?
     new floccUI.Input({
-      name: "population",
-      label: "Agent Population"
+      name: "subsidy",
+      label: "Green Subsidy",
+      value: 0
     }),
     new floccUI.Slider({
       name: "subsidy",
-      label: "Green subsidy",
+      label: "Green Subsidy",
       min: 0,
       max: 25,
       step: 1
+    }),
+    new floccUI.Input({
+      name: "tax",
+      label: "Fuel Tax",
+      value: 0
     }),
     new floccUI.Slider({    // DONE
       name: "tax",
@@ -178,13 +185,19 @@ function ui() {
       max: 70,
       step: 1
     }),
-    new floccUI.Slider({
-      name: "distance",
-      label: "Avg. distance travelled",
-      min: 0,
-      max: 100,
-      step: 1,
+
+    //OLD:
+    new floccUI.Input({
+      name: "population",
+      label: "Agent Population BROKEN"
     }),
+    // new floccUI.Slider({
+    //   name: "distance",
+    //   label: "Avg. distance travelled",
+    //   min: 0,
+    //   max: 100,
+    //   step: 1,
+    // }),
     new floccUI.Button({
       label: "Start",
       onClick() {
@@ -227,29 +240,23 @@ function ui() {
 
 
 function run() {
-  //trial
-  if (environment.get("subsidyFixed") === 0) {
-    environment.set("subsidy", subsidy)
-  } else if (environment.get("subsidyFixed") === 1) {
+  if (environment.get("subsidyFixed") === 1) {
     if (environment.get("subsidy") <= 25) {
       environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 1000) ))) // 0.01  // let user set increment through sider
     };
   }
 
-  if (environment.get("taxFixed") === 0) {
-    environment.set("tax", tax)
-  } else if (environment.get("taxFixed") === 1) {
+  if (environment.get("taxFixed") === 1) {
     if (environment.get("tax") <= 65) {
       environment.set("tax", (environment.get("tax") + utils.random(0, (environment.get("taxIncrement") / 1000) )))  // 0.02 // let user set increment through sider
     };
   }
 
-  // Works
   // if (environment.get("subsidyFixed") === 0) {
   //   environment.set("subsidy", subsidy)
   // } else if (environment.get("subsidyFixed") === 1) {
   //   if (environment.get("subsidy") <= 25) {
-  //     environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 100) ))) // 0.01  // let user set increment through sider
+  //     environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 1000) ))) // 0.01  // let user set increment through sider
   //   };
   // }
 
@@ -257,16 +264,9 @@ function run() {
   //   environment.set("tax", tax)
   // } else if (environment.get("taxFixed") === 1) {
   //   if (environment.get("tax") <= 65) {
-  //     environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))  // let user set increment through sider
+  //     environment.set("tax", (environment.get("tax") + utils.random(0, (environment.get("taxIncrement") / 1000) )))  // 0.02 // let user set increment through sider
   //   };
   // }
-
-  // if (environment.get("subsidy") <= 25) {
-  //   environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01))) // let user set increment through sider
-  // };
-  // if (environment.get("tax") <= 65) {
-  //   environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))// let user set increment through sider
-  // };
 
   environment.tick({
     randomizeOrder: true,    
