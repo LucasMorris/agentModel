@@ -13,9 +13,13 @@ const heightGraph = 600;
 
 
 // Setting model parameters
-const population = 1;     // Number of agents in model
+const population = 500;     // Number of agents in model
 const subsidy = 0;        // Agent susceptibility to subsidies
 const tax = 15;          // Agent susceptibility to tax changes
+
+// Boolean
+const subsidyFixed = 1;   //allows subsidy to increase by default
+const taxFixed = 1;       //allows tax to increase by default
 
 
 // Agent model environment setup
@@ -23,7 +27,8 @@ const environment = new flocc.Environment();
 // environment.set("population", population);
 environment.set("subsidy", subsidy);
 environment.set("tax", tax);
-
+environment.set("subsidyFixed", subsidyFixed);
+environment.set("taxFixed", taxFixed);
 
 // Agent tick interactions
 function tick(agent) {
@@ -76,8 +81,8 @@ let eCarPref =
   }
 
   //DEBUGGING - To remove:
-  console.log(carPref, bikePref, eCarPref);
-  // console.log(concern, distance, tax, subsidy);
+  //console.log(carPref, bikePref, eCarPref);
+  console.log(concern, distance, tax, subsidy);
 }
 
 
@@ -95,6 +100,7 @@ function setup() {
     environment.addAgent(agent);
   }
 }
+
 
 
 // Add table to show population preference breakdown
@@ -115,19 +121,30 @@ function setup() {
 // Create the UI interface to change parameters
 function ui() {
   new floccUI.Panel(environment, [
-    new floccUI.Slider({
-      name: "concern",
-      label: "Env. concisouness",
-      min: 0,
-      max: 10,
-      step: 1
+    // REMOVE IF NO LONGER NEEDED
+    // new floccUI.Slider({
+    //   name: "concern",
+    //   label: "Env. concisouness",
+    //   min: 0,
+    //   max: 10,
+    //   step: 1
+    // }),
+
+    new floccUI.Radio({
+      name: "subsidyFixed",
+      choices: [0, 1],
+      choiceLabels: ["Yes", "No"],
+      value: subsidyFixed
     }),
-    new floccUI.Slider({
+    new floccUI.Radio({
+      name: "taxFixed",
+      choices: [0, 1],
+      choiceLabels: ["Yes", "No"],
+      value: taxFixed
+    }),
+    new floccUI.Input({
       name: "population",
-      label: "Agent Population",
-      min: 100,
-      max: 1500,
-      step: 100
+      label: "Agent Population"
     }),
     new floccUI.Slider({
       name: "subsidy",
@@ -156,15 +173,7 @@ function ui() {
         setup();
         run();
       }
-    }),
-    //TESTING AREA
-    new floccUI.Radio({    // DONE
-      name: "tax",
-      label: "Fuel Tax",
-      min: 0,
-      max: 70,
-      step: 1
-    }),
+    })
   ])
   const containerGraph = document.getElementById("graph-container");
   const graph = new flocc.LineChartRenderer(environment, {
@@ -198,14 +207,30 @@ function ui() {
 }
 
 
+
 function run() {
-  if (environment.get("subsidy") <= 25) {
-    environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01))) // let user set increment through sider
+  if (environment.get("subsidyFixed") === 0) {
+    environment.set("subsidy", subsidy)
+  } else if (environment.get("subsidyFixed") === 1) {
+    if (environment.get("subsidy") <= 25) {
+      environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01)))  // let user set increment through sider
+    };
   }
 
-  if (environment.get("tax") <= 65) {
-    environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))// let user set increment through sider
+  if (environment.get("taxFixed") === 0) {
+    environment.set("tax", tax)
+  } else if (environment.get("taxFixed") === 1) {
+    if (environment.get("tax") <= 65) {
+      environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))  // let user set increment through sider
+    };
   }
+
+  // if (environment.get("subsidy") <= 25) {
+  //   environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01))) // let user set increment through sider
+  // };
+  // if (environment.get("tax") <= 65) {
+  //   environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))// let user set increment through sider
+  // };
 
   environment.tick({
     randomizeOrder: true,    
@@ -213,10 +238,9 @@ function run() {
   if (environment.time <= 1000) {
     requestAnimationFrame(run);
   };
-  
 };
 
 
-setup();
+// setup();
 ui();
 // run();  // uncomment if the model should run when page is loaded
