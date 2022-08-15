@@ -20,6 +20,7 @@ const tax = 15;          // Agent susceptibility to tax changes
 
 // Agent model environment setup
 const environment = new flocc.Environment();
+// environment.set("population", population);
 environment.set("subsidy", subsidy);
 environment.set("tax", tax);
 
@@ -28,7 +29,6 @@ environment.set("tax", tax);
 function tick(agent) {
   // get all variables from environment
    let { concern, distance } = agent.getData();
-
    let tax = environment.get("tax");
    let subsidy = environment.get("subsidy");
 
@@ -48,20 +48,21 @@ function scale(x, lx, hx, lo, ho) {
 
 let bikePref = 
   scaleReverse(distance, 2, 20, 0.1, 0.8)
-  * scale(concern, 0, 100, 0.2, 0.9);
+  * scale(concern, 0, 100, 0.2, 0.9)
+  * 0.1  // tax constant
+  * 0.2;  // subsidy constant
 
-let carPref = // ((100 - tax) / 100);
+let carPref = 
   scale(distance, 10, 100, 0.1, 0.8) //fruther live more likely car ex 100km 0.8 lilely to use car
   * 0.5 //constant concern when using car
-  * scaleReverse(tax, 15, 65, 0.1, 1); //higher tax less likely use car
+  * scaleReverse(tax, 15, 65, 0.1, 1) //higher tax less likely use car
+  * 0.2;  // subisdy constant
 
 let eCarPref = 
   scale(distance, 10, 75, 0.1, 0.8)
   * scale(concern, 0, 100, 0.2, 0.9)
+  * 0.3  // tax constant
   * scale(subsidy, 0, 25, 0.2, 0.8);
- // * 
-
-// add a constant for each of the missing varlibles
 
 // setting agent preference based upon previous calculations
   if (bikePref > carPref && bikePref > eCarPref) {
@@ -71,10 +72,10 @@ let eCarPref =
     agent.set("preference", 0) // car
   }
   else {
-    agent.set("preference", -1)  // e car
+    agent.set("preference", -1)  // ecar
   }
 
-  //DEBUGGING - To remove
+  //DEBUGGING - To remove:
   console.log(carPref, bikePref, eCarPref);
   // console.log(concern, distance, tax, subsidy);
 }
@@ -94,27 +95,21 @@ function setup() {
     environment.addAgent(agent);
   }
 }
-function reset() {
-  environment.clear();
-  while (environment.getAgents().length > 0) {
-    environment.removeAgent(environment.getAgents()[0]);
-  }
-}
 
 
 // Add table to show population preference breakdown
-const containerModel = document.getElementById("model-container");
-const table = new flocc.TableRenderer(environment, {
-  precision: 1,   // Number of floating point decimal places to be shown
-  filter: agent => {
-    return agent.get("preference")
-  }
-});
-table.columns = [
-  "Preference",
-  "Number of population",
-];
-table.mount(containerModel);
+// const containerModel = document.getElementById("model-container");
+// const table = new flocc.TableRenderer(environment, {
+//   precision: 1,   // Number of floating point decimal places to be shown
+//   filter: agent => {
+//     return agent.get("preference")
+//   }
+// });
+// table.columns = [
+//   "Preference",
+//   "Number of population",
+// ];
+// table.mount(containerModel);
 
 
 // Create the UI interface to change parameters
@@ -128,18 +123,25 @@ function ui() {
       step: 1
     }),
     new floccUI.Slider({
+      name: "population",
+      label: "Agent Population",
+      min: 100,
+      max: 1500,
+      step: 100
+    }),
+    new floccUI.Slider({
       name: "subsidy",
       label: "Green subsidy",
       min: 0,
-      max: 1,
-      step: 0.01
+      max: 25,
+      step: 1
     }),
-    new floccUI.Slider({
+    new floccUI.Slider({    // DONE
       name: "tax",
       label: "Fuel Tax",
       min: 0,
-      max: 1,
-      step: 0.01
+      max: 70,
+      step: 1
     }),
     new floccUI.Slider({
       name: "distance",
@@ -154,7 +156,15 @@ function ui() {
         setup();
         run();
       }
-    })
+    }),
+    //TESTING AREA
+    new floccUI.Radio({    // DONE
+      name: "tax",
+      label: "Fuel Tax",
+      min: 0,
+      max: 70,
+      step: 1
+    }),
   ])
   const containerGraph = document.getElementById("graph-container");
   const graph = new flocc.LineChartRenderer(environment, {
@@ -163,17 +173,17 @@ function ui() {
     height: heightGraph,
     width: widthGraph
   });
-  // Brown = fossile fuel powered car (1)
-  // Orange = bike (0)
+  // Brown = fossile fuel powered car (0)
+  // Orange = bike (1)
   // Green = ecar (-1)
   graph.metric("preference", {
-    color: "brown",
+    color: "orange",
     fn(arr) {
       return arr.filter((currentState) => currentState === 1).length / population;
     }
   });
   graph.metric("preference", {
-    color: "orange",
+    color: "brown",
     fn(arr) {
       return arr.filter((currentState) => currentState === 0).length / population;
     }
