@@ -13,13 +13,15 @@ const heightGraph = 600;
 
 
 // Setting model parameters
-const population = 300;     // Number of agents in model
+const population = 1;     // Number of agents in model
 const subsidy = 0;        // Agent susceptibility to subsidies
 const tax = 15;          // Agent susceptibility to tax changes
 const subsidyFixed = 1;   //allows subsidy to increase by default
 const taxFixed = 1;       //allows tax to increase by default
 const subsidyIncrement = 0;
 const taxIncrement = 0;
+const bikeDistMax = 20;
+const bikeDistMin = 2;
 
 
 // Agent model environment setup
@@ -31,6 +33,8 @@ environment.set("subsidyFixed", subsidyFixed);
 environment.set("taxFixed", taxFixed);
 environment.set("subsidyIncrement", subsidyIncrement);
 environment.set("taxIncrement", taxIncrement);
+environment.set("bikeDistMax", bikeDistMax);
+environment.set("bikeDistMin", bikeDistMin);
 
 
 // Agent tick interactions
@@ -39,6 +43,10 @@ function tick(agent) {
    let { concern, distance } = agent.getData();
    let tax = environment.get("tax");
    let subsidy = environment.get("subsidy");
+   
+  //trials
+  let bikeMax = environment.get("bikeDistMax");
+  let bikeMin = environment.get("bikeDistMin");
 
 // preference 1=car, 0=bike, -1=ecar
 function scaleReverse(x, lx, hx, lo, ho) {
@@ -55,7 +63,7 @@ function scale(x, lx, hx, lo, ho) {
 }
 
 let bikePref = 
-  scaleReverse(distance, 2, 20, 0.1, 0.8)
+  scaleReverse(distance, bikeMin, bikeMax, 0.1, 0.8)  // defaults were 2, 20 for min and max
   * scale(concern, 0, 100, 0.2, 0.9)
   * 0.1  // tax constant
   * 0.2;  // subsidy constant
@@ -87,6 +95,7 @@ let eCarPref =
   // console.log(carPref, bikePref, eCarPref);
   // console.log(concern, distance, tax, subsidy);
   // console.log(tax);
+  console.log(bikeMin, bikeMax);
 }
 
 
@@ -104,7 +113,6 @@ function setup() {
     environment.addAgent(agent);
   }
 }
-
 
 
 // Add table to show population preference breakdown
@@ -178,26 +186,27 @@ function ui() {
       label: "Fuel Tax",
       value: 0
     }),
-    new floccUI.Slider({    // DONE
+    new floccUI.Slider({
       name: "tax",
       label: "Fuel Tax",
       min: 0,
       max: 70,
       step: 1
     }),
+    new floccUI.Input({
+      name: "bikeDistMin",
+      label: "Minimum cycling distance"
+    }),
+    new floccUI.Input({
+      name: "bikeDistMax",
+      label: "Max cycling distance"
+    }),
 
-    //OLD:
+    //FIX!:
     new floccUI.Input({
       name: "population",
       label: "Agent Population BROKEN"
     }),
-    // new floccUI.Slider({
-    //   name: "distance",
-    //   label: "Avg. distance travelled",
-    //   min: 0,
-    //   max: 100,
-    //   step: 1,
-    // }),
     new floccUI.Button({
       label: "Start",
       onClick() {
@@ -238,7 +247,6 @@ function ui() {
 }
 
 
-
 function run() {
   if (environment.get("subsidyFixed") === 1) {
     if (environment.get("subsidy") <= 25) {
@@ -252,22 +260,6 @@ function run() {
     };
   }
 
-  // if (environment.get("subsidyFixed") === 0) {
-  //   environment.set("subsidy", subsidy)
-  // } else if (environment.get("subsidyFixed") === 1) {
-  //   if (environment.get("subsidy") <= 25) {
-  //     environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 1000) ))) // 0.01  // let user set increment through sider
-  //   };
-  // }
-
-  // if (environment.get("taxFixed") === 0) {
-  //   environment.set("tax", tax)
-  // } else if (environment.get("taxFixed") === 1) {
-  //   if (environment.get("tax") <= 65) {
-  //     environment.set("tax", (environment.get("tax") + utils.random(0, (environment.get("taxIncrement") / 1000) )))  // 0.02 // let user set increment through sider
-  //   };
-  // }
-
   environment.tick({
     randomizeOrder: true,    
   });
@@ -278,6 +270,5 @@ function run() {
 
 
 // setup();
-
 ui();
 // run();  // uncomment if the model should run when page is loaded
