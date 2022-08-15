@@ -13,13 +13,13 @@ const heightGraph = 600;
 
 
 // Setting model parameters
-const population = 500;     // Number of agents in model
+const population = 300;     // Number of agents in model
 const subsidy = 0;        // Agent susceptibility to subsidies
 const tax = 15;          // Agent susceptibility to tax changes
-
-// Boolean
 const subsidyFixed = 1;   //allows subsidy to increase by default
 const taxFixed = 1;       //allows tax to increase by default
+const subsidyIncrement = 0;
+const taxIncrement = 0;
 
 
 // Agent model environment setup
@@ -29,6 +29,9 @@ environment.set("subsidy", subsidy);
 environment.set("tax", tax);
 environment.set("subsidyFixed", subsidyFixed);
 environment.set("taxFixed", taxFixed);
+environment.set("subsidyIncrement", subsidyIncrement);
+environment.set("taxIncrement", taxIncrement);
+
 
 // Agent tick interactions
 function tick(agent) {
@@ -142,6 +145,21 @@ function ui() {
       choiceLabels: ["Yes", "No"],
       value: taxFixed
     }),
+    new floccUI.Slider({
+      name: "subsidyIncrement",
+      label: "Subsidy Increment",
+      min: 0,
+      max: 15,
+      step: 1 
+    }),
+    new floccUI.Slider({
+      name: "taxIncrement",
+      label: "Tax Increment",
+      min: 0,
+      max: 25,
+      step: 1 
+    }),
+    //OLD?
     new floccUI.Input({
       name: "population",
       label: "Agent Population"
@@ -209,11 +227,12 @@ function ui() {
 
 
 function run() {
+  //trial
   if (environment.get("subsidyFixed") === 0) {
     environment.set("subsidy", subsidy)
   } else if (environment.get("subsidyFixed") === 1) {
     if (environment.get("subsidy") <= 25) {
-      environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01)))  // let user set increment through sider
+      environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 1000) ))) // 0.01  // let user set increment through sider
     };
   }
 
@@ -221,9 +240,26 @@ function run() {
     environment.set("tax", tax)
   } else if (environment.get("taxFixed") === 1) {
     if (environment.get("tax") <= 65) {
-      environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))  // let user set increment through sider
+      environment.set("tax", (environment.get("tax") + utils.random(0, (environment.get("taxIncrement") / 1000) )))  // 0.02 // let user set increment through sider
     };
   }
+
+  // Works
+  // if (environment.get("subsidyFixed") === 0) {
+  //   environment.set("subsidy", subsidy)
+  // } else if (environment.get("subsidyFixed") === 1) {
+  //   if (environment.get("subsidy") <= 25) {
+  //     environment.set("subsidy", (environment.get("subsidy") + utils.random(0, (environment.get("subsidyIncrement") / 100) ))) // 0.01  // let user set increment through sider
+  //   };
+  // }
+
+  // if (environment.get("taxFixed") === 0) {
+  //   environment.set("tax", tax)
+  // } else if (environment.get("taxFixed") === 1) {
+  //   if (environment.get("tax") <= 65) {
+  //     environment.set("tax", (environment.get("tax") + utils.random(0, 0.02)))  // let user set increment through sider
+  //   };
+  // }
 
   // if (environment.get("subsidy") <= 25) {
   //   environment.set("subsidy", (environment.get("subsidy") + utils.random(0, 0.01))) // let user set increment through sider
@@ -242,5 +278,6 @@ function run() {
 
 
 // setup();
+
 ui();
 // run();  // uncomment if the model should run when page is loaded
