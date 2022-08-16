@@ -93,8 +93,8 @@ let eCarPref =
 
   //DEBUGGING - To remove:
   // console.log(carPref, bikePref, eCarPref);
-  // console.log(concern, distance, tax, subsidy);
-  console.log(tax);
+   console.log(concern, distance, tax, subsidy);
+  // console.log(tax);
   // console.log(bikeMin, bikeMax);
 }
 
@@ -102,7 +102,6 @@ let eCarPref =
 // Create general population agents and add to environment
 function setup() {
   let population = environment.get("population");
-  console.log(environment.get("population"))
   environment.time = 0;
   environment.clear();
   for(var i = 0; i < population; i++) {
@@ -135,24 +134,16 @@ function setup() {
 // Create the UI interface to change parameters
 function ui() {
   new floccUI.Panel(environment, [
-    // REMOVE IF NO LONGER NEEDED
-    // new floccUI.Slider({
-    //   name: "concern",
-    //   label: "Env. concisouness",
-    //   min: 0,
-    //   max: 10,
-    //   step: 1
-    // }),
-
     new floccUI.Radio({
       choices: [0, 1],
       choiceLabels: ["Yes", "No"],
-      label: "fixed sub", // BUG does not show
+      label: "fixed subsidy", // BUG does not show
       name: "subsidyFixed",
       value: subsidyFixed
     }),
     new floccUI.Radio({
       name: "taxFixed",
+      label: "fixed tax", // BUG does not show
       choices: [0, 1],
       choiceLabels: ["Yes", "No"],
       value: taxFixed
@@ -171,11 +162,6 @@ function ui() {
       max: 25,
       step: 1 
     }),
-    // new floccUI.Input({
-    //   name: "subsidy",
-    //   label: "Green Subsidy",
-    //   value: 0
-    // }),
     new floccUI.Slider({
       name: "subsidy",
       label: "Green Subsidy",
@@ -183,11 +169,6 @@ function ui() {
       max: 25,
       step: 1
     }),
-    // new floccUI.Input({
-    //   name: "tax",
-    //   label: "Fuel Tax",
-    //   value: 0
-    // }),
     new floccUI.Slider({
       name: "tax",
       label: "Fuel Tax",
@@ -203,8 +184,6 @@ function ui() {
       name: "bikeDistMax",
       label: "Max cycling distance"
     }),
-
-    //FIX!:
     new floccUI.Input({
       name: "population",
       label: "Agent Population"
