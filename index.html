@@ -8,9 +8,13 @@
 <body>
     <div class="application-container">
         <div class="title-container">
-            <h1>Agent-Based Simulation</h1>
+            <h1>Agent-Based Model</h1>
         </div>
         <div id="model-container"></div>
+        <button onclick="scenarioOne()">Load Scenario One</button>
+        <button onclick="scenarioTwo()">Load Scenario Two</button>
+        <button onclick="scenarioThree()">Load Scenario Three</button>
+
         <div id="graph-text">
             <h3>The change of preference can be seen here:</h3>
             <div id="graph-container"></div>            
@@ -25,5 +29,6 @@
     <script src=" https://unpkg.com/flocc-ui@0.0.9/dist/flocc-ui.js"></script>
     
     <script src="model.js"></script>
+    <script src="scenarios.js"></script>
   </body>
 </html>
