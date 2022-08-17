@@ -14,17 +14,26 @@
 
         <div id="tutorial">
             <p>
-                This is how to use the Agent-Based Model to show transportation preferences
-                and their changes when influenced by environmental factors.
-            </p><br>
+                This Agent-Based Model has been created to help show how transportation preferences change between a fossil fuel car, electric car and bike, based upon environmental changes. Three default scenarios have been provided but custom values can be set.
+            </p>
+            <p>
+                The y-axis represents the percentage of the population that has chosen a specific mode of transportation. The x-axis shows time progression. The model has been set to run for 1000 ticks (unit of time).
+            </p> <br>
+            <h4>How to use:</h4>
+            <ul>
+                <li>Select one of the three pre-made scenarios below or enter custom values.</li>
+                <li>If custom values have been entered into the input fields, enter key or the onscreen return icon must be pressed to confirm selection. This is not required when using sliders to choose values or when using the default scenarios.</li>
+                <li>Click “Start” to start the model and observe how the agent's preference changes overtime.</li>
+                <li>To reset/restart/change the environmental factors reload the page. If model has run and environmental factors have been manually changed,they will not influence the model. A page reload must be done to reset everything.</li>
+            </ul>
             <p>Buttons to load default example scenarios can be found below:</p>
         </div>
 
         <div id="scenarios">
             <h3>Click to load the pre-made scenarios:</h3>
-            <button onclick="scenarioOne()">Load Scenario One</button>
-            <button onclick="scenarioTwo()">Load Scenario Two</button>
-            <button onclick="scenarioThree()">Load Scenario Three</button>
+            <button class="button" onclick="scenarioOne()">Scenario One</button>
+            <button class="button" onclick="scenarioTwo()">Scenario Two</button>
+            <button class="button" onclick="scenarioThree()">Scenario Three</button>
         </div>
 
         <div id="legend">
