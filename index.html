@@ -11,10 +11,38 @@
             <h1>Agent-Based Model</h1>
         </div>
         <!-- <div id="model-container"></div> -->
-        <button onclick="scenarioOne()">Load Scenario One</button>
-        <button onclick="scenarioTwo()">Load Scenario Two</button>
-        <button onclick="scenarioThree()">Load Scenario Three</button>
 
+        <div id="tutorial">
+            <p>
+                This is how to use the Agent-Based Model to show transportation preferences
+                and their changes when influenced by environmental factors.
+            </p><br>
+            <p>Buttons to load default example scenarios can be found below:</p>
+
+        </div>
+        <div id="scenarios">
+            <h3>Click to load the pre-made scenarios:</h3>
+            <button onclick="scenarioOne()">Load Scenario One</button>
+            <button onclick="scenarioTwo()">Load Scenario Two</button>
+            <button onclick="scenarioThree()">Load Scenario Three</button>
+        </div>
+
+        <div id="legend">
+            <h3>Line Graph Legend:</h3>
+                <div class="row">
+                    <div class="box brown"></div>
+                    <span>= Fossil Fuel Car</span>
+                </div>
+                <div class="row">
+                    <div class="box orange"></div>
+                    <span>= Bike</span>
+                </div>
+                <div class="row">
+                    <div class="box green"></div>
+                    <span>= Electric Car</span>
+                </div>
+        </div>
+        
         <div id="graph-text">
             <h3>The change of preference can be seen here:</h3>
             <div id="graph-container"></div>            
