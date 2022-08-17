@@ -45,6 +45,49 @@ td {
     text-align: right;
 } */
 
+#tutorial {
+    text-align: center;
+    width: 600px;
+    border-bottom: solid 2px #3a3a3c;
+}
+
+#scenarios {
+    width: 600px;
+    flex-direction: column;
+    border-bottom: solid 2px #3a3a3c;
+    padding: 15px;
+}
+
+#legend {
+    width: 600px;
+    border-bottom: solid 2px #3a3a3c;
+}
+
+.row {
+    display : flex;
+    align-items : center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.box {
+  height: 10px;
+  width: 10px;
+  border: 1px solid black;
+  margin-right : 5px;
+}
+
+.brown {
+  background-color: brown;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.green {
+  background-color: green;
+}
+
 #graph-container {
     width: 600px;
     border-bottom: solid 2px #3a3a3c;
