@@ -199,7 +199,7 @@ function ui() {
   const containerGraph = document.getElementById("graph-container");
   const graph = new flocc.LineChartRenderer(environment, {
     autoScale: true,    // Allows x axis to adjust as time increases
-    // background: "#FFFFFF",
+    background: "#FFFFFF",
     height: heightGraph,
     width: widthGraph
   });
