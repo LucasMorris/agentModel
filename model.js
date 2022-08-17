@@ -91,7 +91,7 @@ let eCarPref =
     agent.set("preference", -1)  // ecar
   }
 
-  //DEBUGGING - To remove:
+  //DEBUGGING
   // console.log(carPref, bikePref, eCarPref);
    console.log(concern, distance, tax, subsidy);
   // console.log(tax);
