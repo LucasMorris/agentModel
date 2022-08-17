@@ -46,7 +46,7 @@ td {
 } */
 
 #tutorial {
-    text-align: center;
+    text-align: justify;
     width: 600px;
     border-bottom: solid 2px #3a3a3c;
 }
@@ -56,6 +56,10 @@ td {
     flex-direction: column;
     border-bottom: solid 2px #3a3a3c;
     padding: 10px;
+}
+
+.button{
+    margin-left: 12%;
 }
 
 #legend {
