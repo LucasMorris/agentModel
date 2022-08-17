@@ -20,14 +20,14 @@ body {
     border-bottom: solid 2px #3a3a3c;
 }
 
-/* style for showing model with agebts */
+/* style for showing model with agents */
 /* #model-container {
     width: 600px;
     border-bottom: solid 2px #3a3a3c;
 } */
 
 /* style for table container */
-#model-container {
+/* #model-container {
     width: 600px;
     border-bottom: solid 2px #3a3a3c;
 }
@@ -43,7 +43,7 @@ table, td {
 td {
     padding: 0 4px;
     text-align: right;
-}
+} */
 
 #graph-container {
     width: 600px;
