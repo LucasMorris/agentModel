@@ -93,7 +93,7 @@ let eCarPref =
 
   //DEBUGGING
   // console.log(carPref, bikePref, eCarPref);
-   console.log(concern, distance, tax, subsidy);
+  //console.log(concern, distance, tax, subsidy);
   // console.log(tax);
   // console.log(bikeMin, bikeMax);
 }
@@ -150,14 +150,14 @@ function ui() {
     }),
     new floccUI.Slider({
       name: "subsidyIncrement",
-      label: "Subsidy Increment",
+      label: "Green Subsidy Increment",
       min: 0,
       max: 15,
       step: 1 
     }),
     new floccUI.Slider({
       name: "taxIncrement",
-      label: "Tax Increment",
+      label: "Fuel Tax Increment",
       min: 0,
       max: 25,
       step: 1 
